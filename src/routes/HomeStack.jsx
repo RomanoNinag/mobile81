@@ -6,7 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Home from '../screens/Home'
 import Donante from '../userScreens/Donante/Donante'
-import AppStack from './AppStack'
+import { AppStackVoluntario } from './AppStackVoluntario'
+import { AppStackDonante } from './AppStackDonante'
 
 const HomeStack = () => {
     const [tipo, setTipo] = useState();
@@ -21,10 +22,10 @@ const HomeStack = () => {
     }, [])
     switch (tipo) {
         case 'voluntario':
-            return (<AppStack />)
+            return (<AppStackVoluntario />)
             break;
         case 'donante_natural':
-            return (<Donante />)
+            return (<AppStackDonante />)
             break;
 
         default:

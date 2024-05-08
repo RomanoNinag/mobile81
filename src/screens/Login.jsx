@@ -6,7 +6,6 @@ import { Snackbar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppStack from '../routes/AppStack';
 
 export const Login = () => {
     const navigation = useNavigation();

@@ -55,7 +55,7 @@ function ListaColab() {
             >
                 {datosAceptadas.data.map((fila, i) => {
                     return (
-                        <ListItem>
+                        <ListItem key={i}>
                             <ListItem.Content>
                                 <ListItem.Title>{fila.id_user}</ListItem.Title>
                             </ListItem.Content>

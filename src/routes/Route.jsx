@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { NavigationContainer } from '@react-navigation/native'
 //navigation
 import AuthStack from './AuthStack'
-import AppStack from './AppStack'
 import HomeStack from './HomeStack'
 
 const Route = () => {

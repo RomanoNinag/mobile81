@@ -55,7 +55,7 @@ function ListaColab() {
             >
                 {datosAceptadas.data.map((fila, i) => {
                     return (
-                        <ListItem>
+                        <ListItem key={i}>
                             <ListItem.Content>
                                 <ListItem.Title>{fila.id_user}</ListItem.Title>
                             </ListItem.Content>
@@ -125,7 +125,7 @@ function ListaRespon() {
                 {datosAceptadas.data.map((fila, i) => {
                     const col = fila.estado ? 'green' : 'red';
                     return (
-                        <ListItem>
+                        <ListItem key={i}>
                             <ListItem.Content>
                                 <ListItem.Title>{fila.id_donacion}</ListItem.Title>
                             </ListItem.Content>
