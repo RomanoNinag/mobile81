@@ -34,8 +34,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Home = () => {
     const [userData, setUserData] = useState('');
 
-    const Stack = createNativeStackNavigator();
-
     const navigation = useNavigation();
     function signOut() {
         AsyncStorage.setItem('isLoggedIn', JSON.stringify(false));
