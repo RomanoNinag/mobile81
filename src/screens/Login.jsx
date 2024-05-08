@@ -26,8 +26,10 @@ export const Login = () => {
                     Alert.alert('Login in suc')
                     AsyncStorage.setItem('token', res.data.token);
                     AsyncStorage.setItem('id_user', JSON.stringify(res.data.id_user));
+                    AsyncStorage.setItem('tipo', res.data.tipo);
                     AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
-                    navigation.navigate('AppStack');
+                    // navigation.navigate('AppStack');
+                    navigation.navigate('HomeStack');
                     // <AppStack />
                 }
             });

@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native'
 //navigation
 import AuthStack from './AuthStack'
 import AppStack from './AppStack'
+import HomeStack from './HomeStack'
 
 const Route = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,7 +21,7 @@ const Route = () => {
     }, [])
     return (
         <NavigationContainer>
-            {isLoggedIn ? <AppStack /> : <AuthStack />}
+            {isLoggedIn ? <HomeStack /> : <AuthStack />}
             {/* <AuthStack /> */}
         </NavigationContainer>
     )
