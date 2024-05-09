@@ -8,6 +8,7 @@ import Home from '../screens/Home'
 import Donante from '../userScreens/Donante/Donante'
 import { AppStackVoluntario } from './AppStackVoluntario'
 import { AppStackDonante } from './AppStackDonante'
+import { AppStackReceptor } from './AppStackReceptor'
 
 const HomeStack = () => {
     const [tipo, setTipo] = useState();
@@ -27,7 +28,15 @@ const HomeStack = () => {
         case 'donante_natural':
             return (<AppStackDonante />)
             break;
-
+        case 'encargado_receptor':
+            return (<AppStackReceptor />)
+            break;
+        case 'receptor_natural':
+            return (<AppStackReceptor />)
+            break;
+        case 'encargado_org_ben':
+            return (<AppStackReceptor />)
+            break;
         default:
             break;
     }

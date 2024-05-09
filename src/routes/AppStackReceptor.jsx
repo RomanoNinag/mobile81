@@ -14,7 +14,9 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import Perfil from '../screens/Home'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Login } from '../screens/Login'
-const AppStack = () => {
+import { Receptor } from '../userScreens/Receptor/Receptor'
+import { ConfirmarRec } from '../userScreens/Receptor/ConfirmarRec'
+export const AppStackReceptor = () => {
   const fcol = '#154c79';
   const ufcol = '#5E5E64'
 
@@ -38,7 +40,7 @@ const AppStack = () => {
         }}
       >
         <Tab.Screen
-          name='Home' component={Home}
+          name='Receptor' component={Receptor}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.contIconNav}>
@@ -51,8 +53,8 @@ const AppStack = () => {
           }}
         />
         <Tab.Screen
-          name="Donacion"
-          component={Donacion}
+          name="ConfirmarRec"
+          component={ConfirmarRec}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.contIconNav}>
@@ -66,20 +68,7 @@ const AppStack = () => {
             ),
           }}
         />
-        <Tab.Screen name='Entrega' component={Entrega}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View style={styles.contIconNav}>
-                <FontAwesome6 name='list-check' size={30}
-                  style={{ color: focused ? fcol : ufcol }}
-                />
-                <Text
-                  style={{ color: focused ? fcol : ufcol }}
-                >Entrega</Text>
-              </View>
-            ),
-          }}
-        />
+
       </Tab.Navigator >
     </>
   )
@@ -91,4 +80,3 @@ const styles = StyleSheet.create({
 
   },
 })
-export default AppStack

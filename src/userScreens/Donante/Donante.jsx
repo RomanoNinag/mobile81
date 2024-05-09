@@ -3,6 +3,7 @@ import React from 'react'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { Perfil } from '../../screens/Perfil';
 
 const Donante = () => {
     const navigation = useNavigation();
@@ -22,6 +23,7 @@ const Donante = () => {
                 <FontAwesome5 name='sign-out-alt' size={30} color="blue" />
             </TouchableOpacity>
             <Text>Donante</Text>
+            <Perfil />
         </View>
     )
 }

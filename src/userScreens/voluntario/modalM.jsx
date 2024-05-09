@@ -7,48 +7,85 @@ import { ScrollView } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { Linking, Button } from 'react-native';
 
-const ModalM = ({ isVisible, setVisible, id_solicitud, onClose, ruta }) => {
+const ModalM = ({ isVisible, setVisible, id_solicitud, onClose, ruta, rutaini, rutafin, estado }) => {
   const [datosAceptadas, setDatosAceptadas] = useState([{}]);
   const [coor, setcoor] = useState({})
   const openGoogleMaps = () => {
     const latitude = coor.lat;
     const longitude = coor.lon;
     const label = coor.dir;
-  
+
     const url = Platform.select({
       ios: `maps:0,0?q=${label}@${latitude},${longitude}`,
       android: `geo:0,0?q=${latitude},${longitude}(${label})`
     });
-  
+
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   };
   useEffect(() => {
     const getDatos = async () => {
       const token = await AsyncStorage.getItem('token');
+      console.log("id pasado don o sol:", id_solicitud);
+      console.log("ruta:", rutaini);
       axios.get(ruta, {
         headers: {
           "x-token": token,
           "id_donacion": id_solicitud,
-          "id_solicitud":id_solicitud,
+          "id_solicitud": id_solicitud,
         }
       })
-      .then(res => {
-        setDatosAceptadas(res.data.body.colaboradores);
-        setcoor(res.data.body.direccion)
-      })
-      .catch(err => {
-        console.error('Error al obtener datos:', err);
-        Alert.alert("Error", "No se pudo cargar los datos.");
-      });
+        .then(res => {
+          setDatosAceptadas(res.data.body.colaboradores);
+          setcoor(res.data.body.direccion)
+        })
+        .catch(err => {
+          console.error('Error al obtener datos:', err);
+          Alert.alert("Error", "No se pudo cargar los datos.");
+        });
     };
     if (isVisible) {
       getDatos();
     }
   }, [isVisible, id_solicitud, ruta]);
+
   useEffect(() => {
     console.log(datosAceptadas);
   }, [datosAceptadas])
-  
+
+  const handleIni = async () => {
+    // const id_con = id_solicitud;
+    const token = await AsyncStorage.getItem('token');
+    console.log("id pasado:", id_solicitud);
+    axios.post(rutaini,
+      { id_donacion: id_solicitud, id_solicitud: id_solicitud, },
+      { headers: { 'x-token': token } })
+      .then(res => {
+        console.log(res.data);
+        // setDatosAceptadas(res.data.body.colaboradores);
+        // setcoor(res.data.body.direccion)
+      })
+      .catch(err => {
+        console.error('Error al obtener datos tray:', err);
+        Alert.alert("Error", "No se pudo cargar los datos.");
+      });
+  }
+  const handleFin = async () => {
+    // const id_con = id_solicitud;
+    const token = await AsyncStorage.getItem('token');
+    
+    axios.post(rutafin,
+      { id_donacion: id_solicitud, id_solicitud: id_solicitud, },
+      { headers: { 'x-token': token } })
+      .then(res => {
+        console.log(res.data);
+        // setDatosAceptadas(res.data.body.colaboradores);
+        // setcoor(res.data.body.direccion)
+      })
+      .catch(err => {
+        console.error('Error al obtener datos tray:', err);
+        Alert.alert("Error", "No se pudo cargar los datos.");
+      });
+  }
   return (
     <Modal
       animationType="slide"
@@ -60,51 +97,64 @@ const ModalM = ({ isVisible, setVisible, id_solicitud, onClose, ruta }) => {
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-        <View style={styles.container}>
-                <View style={styles.headerTopBar}>
-                    <Text style={styles.headerTopBarText}>Integrantes de equipo</Text>
-                </View>
-                <ScrollView horizontal={true}>
-                    <View>
-                        <ListItem style={styles.header}>
-                            <ListItem.Content>
-                                <ListItem.Title>Id user</ListItem.Title>
-                            </ListItem.Content>
-                            <ListItem.Content>
-                                <ListItem.Title>Ci</ListItem.Title>
-                            </ListItem.Content>
-                            <ListItem.Content>
-                                <ListItem.Title>Nombre</ListItem.Title>
-                            </ListItem.Content>
-                            <ListItem.Content>
-                                <ListItem.Title>Apellido Paterno</ListItem.Title>
-                            </ListItem.Content>
-                            <ListItem.Content>
-                                <ListItem.Title>Apellido Materno</ListItem.Title>
-                            </ListItem.Content>
-                        </ListItem>
-                        {
-                            datosAceptadas.map((fila, i) => {
-                                return (
-                                    <ListItem style={styles.row}>
-                                        <ListItem.Content style={styles.cell}><Text>{fila.id_user}</Text></ListItem.Content>
-                                        <ListItem.Content style={styles.cell}><Text>{fila.ci}</Text></ListItem.Content>
-                                        <ListItem.Content style={styles.cell}><Text>{fila.nombre}</Text></ListItem.Content>
-                                        <ListItem.Content style={styles.cell}><Text>{fila.ap_paterno}</Text></ListItem.Content>
-                                        <ListItem.Content style={styles.cell}><Text>{fila.ap_materno}</Text></ListItem.Content>
-                                    </ListItem>
-                                )
-                            })
-                        }
-                    </View>
-                </ScrollView>
-            </View> 
-            <TouchableOpacity
-                style={{backgroundColor:'#0275d8', padding: 10, borderRadius: 10,color:'#ffffff',paddingHorizontal: 10,marginBottom: 10}}
-                onPress={openGoogleMaps}
-            >
-                <Text style={{color:'#fff'}}>Ver ubicacion</Text>
-            </TouchableOpacity>
+          <View style={styles.container}>
+            <View style={styles.headerTopBar}>
+              <Text style={styles.headerTopBarText}>Integrantes de equipo</Text>
+            </View>
+            <ScrollView horizontal={true}>
+              <View>
+                <ListItem style={styles.header}>
+                  <ListItem.Content>
+                    <ListItem.Title>Id user</ListItem.Title>
+                  </ListItem.Content>
+                  <ListItem.Content>
+                    <ListItem.Title>Ci</ListItem.Title>
+                  </ListItem.Content>
+                  <ListItem.Content>
+                    <ListItem.Title>Nombre</ListItem.Title>
+                  </ListItem.Content>
+                  <ListItem.Content>
+                    <ListItem.Title>Apellido Paterno</ListItem.Title>
+                  </ListItem.Content>
+                  <ListItem.Content>
+                    <ListItem.Title>Apellido Materno</ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+                {
+                  datosAceptadas.map((fila, i) => {
+                    return (
+                      <ListItem style={styles.row}>
+                        <ListItem.Content style={styles.cell}><Text>{fila.id_user}</Text></ListItem.Content>
+                        <ListItem.Content style={styles.cell}><Text>{fila.ci}</Text></ListItem.Content>
+                        <ListItem.Content style={styles.cell}><Text>{fila.nombre}</Text></ListItem.Content>
+                        <ListItem.Content style={styles.cell}><Text>{fila.ap_paterno}</Text></ListItem.Content>
+                        <ListItem.Content style={styles.cell}><Text>{fila.ap_materno}</Text></ListItem.Content>
+                      </ListItem>
+                    )
+                  })
+                }
+              </View>
+            </ScrollView>
+          </View>
+          {estado == 1 ? <TouchableOpacity
+            style={{ backgroundColor: '#5cb85c', padding: 10, borderRadius: 10, color: '#ffffff', paddingHorizontal: 10, marginBottom: 10 }}
+            onPress={() => handleIni()}
+          >
+            <Text style={{ color: '#fff' }}>Iniciar Trayecto</Text>
+          </TouchableOpacity> : null}
+          {estado == 2 ? <TouchableOpacity
+            style={{ backgroundColor: '#d9534f', padding: 10, borderRadius: 10, color: '#ffffff', paddingHorizontal: 10, marginBottom: 10 }}
+            onPress={() => handleFin()}
+          >
+            <Text style={{ color: '#fff' }}>Terminar Trayecto</Text>
+          </TouchableOpacity> : null}
+
+          <TouchableOpacity
+            style={{ backgroundColor: '#0275d8', padding: 10, borderRadius: 10, color: '#ffffff', paddingHorizontal: 10, marginBottom: 10 }}
+            onPress={openGoogleMaps}
+          >
+            <Text style={{ color: '#fff' }}>Ver ubicacion</Text>
+          </TouchableOpacity>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => setVisible(!isVisible)}>
@@ -159,36 +209,36 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
     width: '100%',
-},
-ConBtn: {
+  },
+  ConBtn: {
     display: 'flex',
     flexDirection: 'column',
     gap: 5,
-    },
-headerTopBar: {
+  },
+  headerTopBar: {
     backgroundColor: '#6ab7e2',
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderRadius: 5,
     elevation: 2,
-},
-headerTopBarText: {
+  },
+  headerTopBarText: {
     color: '#fff',
     fontSize: 16,
-},
-header: {
+  },
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,
-},
-heading: {
+  },
+  heading: {
     flex: 1,
     fontSize: 15,
     fontWeight: 'bold',
     textAlign: 'left',
     padding: 10,
-},
-row: {
+  },
+  row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 2,
@@ -198,23 +248,23 @@ row: {
     borderColor: "#fff",
     padding: 10,
     backgroundColor: "#fff",
-},
-cell: {
+  },
+  cell: {
     fontSize: 15,
     textAlign: 'left',
     flex: 1,
-},
-estado: {
+  },
+  estado: {
     height: 35,
     width: '30%',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-},
-estadoText: {
+  },
+  estadoText: {
     color: '#fff',
     fontSize: 16,
-}
+  }
 });
 
 export default ModalM;

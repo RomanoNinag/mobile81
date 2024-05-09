@@ -1,16 +1,17 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //ui react native
 import { ListItem, Avatar } from '@rneui/base';
 import ModalM from './modalM';
+
 function ListaColab() {
     const [expanded, setExpanded] = React.useState(false);
     //para recu datos
     const [datosAceptadas, setDatosAceptadas] = useState({ indice: [], data: [] });
 
-    const getPostulaciones=async()=> {
+    const getPostulaciones = async () => {
         console.log("estamos en colab");
         const token = await AsyncStorage.getItem('token');
         const id_user = JSON.parse(await AsyncStorage.getItem('id_user'));
@@ -38,6 +39,9 @@ function ListaColab() {
     useEffect(() => {
         getPostulaciones();
     }, []);
+    useEffect(() => {
+        console.log(datosAceptadas);
+    }, [datosAceptadas]);
     return (
         <>
             <ListItem.Accordion
@@ -51,7 +55,7 @@ function ListaColab() {
                 onPress={() => {
                     setExpanded(!expanded);
                 }}
-                style={styles.headerTopBar}
+                style={[styles.headerTopBar,]}
             >
                 <ListItem>
                     <ListItem.Content>
@@ -59,26 +63,56 @@ function ListaColab() {
                     </ListItem.Content>
                     <ListItem.Content>
                         <ListItem.Title>Cantidad</ListItem.Title>
-                    </ListItem.Content>  
+                    </ListItem.Content>
                     <ListItem.Content>
                         <ListItem.Title>Estado</ListItem.Title>
-                    </ListItem.Content>      
+                    </ListItem.Content>
                 </ListItem>
                 {datosAceptadas.data.map((fila, i) => {
                     return (
-                        <ListItem key={i}>
+                        <ListItem key={i} >
                             <ListItem.Content>
                                 <ListItem.Title>{fila.id_user}</ListItem.Title>
                             </ListItem.Content>
                             <ListItem.Content>
                                 <ListItem.Title>{fila.id_donacion}</ListItem.Title>
                             </ListItem.Content>
-                            <TouchableOpacity
-                                style={[styles.estado, { backgroundColor: 'green' }]}
-                            >
-                                <Text style={styles.estadoText}>Habilitado</Text>
-                            </TouchableOpacity>
+                            <ListItem.Content style={[styles.ConBtn]}>
+
+                                {
+                                    fila.estado_p == 3 ? <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#000', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Terminado</Text>
+                                    </TouchableOpacity>
+                                        : null}
+                                {fila.estado_p == 2 ? <TouchableOpacity
+                                    style={[styles.estado, { backgroundColor: '#0275d8', width: '100%' }]}
+                                >
+                                    <Text style={styles.estadoText}>En Curso</Text>
+                                </TouchableOpacity>
+                                    : null
+
+                                }
+                                {fila.estado_p == 1 ? <TouchableOpacity
+                                    style={[styles.estado, { backgroundColor: '#5cb85c', width: '100%' }]}
+                                >
+                                    <Text style={styles.estadoText}>Habilitado</Text>
+                                </TouchableOpacity>
+                                    : null
+
+                                }
+                                {
+                                    fila.estado_p == 0 ? <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#d9534f', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Pendiente</Text>
+                                    </TouchableOpacity>
+                                        : null}
+                                
+                            </ListItem.Content>
                             
+
                         </ListItem>
                     )
                 })}
@@ -93,15 +127,17 @@ function ListaRespon() {
     const [datosPendiente, setDatosPendientes] = useState({ indice: [], data: [] });
     const [isModalVisible, setModalVisible] = useState(false);
     const [currentIdSolicitud, setCurrentIdSolicitud] = useState(null);
-  
-    const openModal = (id) => {
-      setCurrentIdSolicitud(id);
-      setModalVisible(true);
-      console.log("holaaaa")
+    const [currentEstadoDon, setCurrentEstadoDon] = useState(null);
+    const openModal = (id, state) => {
+        setCurrentIdSolicitud(id);
+        setCurrentEstadoDon(state);
+        setModalVisible(true);
+        console.log("holaaaa")
     };
     const closeModal = () => {
-      setModalVisible(false);
-      setCurrentIdSolicitud(null);
+        setModalVisible(false);
+        setCurrentIdSolicitud(null);
+        setCurrentEstadoDon(null);
     };
     async function getData() {
         const token = await AsyncStorage.getItem('token');
@@ -130,6 +166,9 @@ function ListaRespon() {
     useEffect(() => {
         getData();
     }, []);
+    useEffect(() => {
+        console.log(datosAceptadas)
+    }, [datosAceptadas])
     return (
         <>
             <ListItem.Accordion
@@ -143,67 +182,93 @@ function ListaRespon() {
                 onPress={() => {
                     setExpanded(!expanded);
                 }}
-                style={styles.headerTopBar}
+                style={[styles.headerTopBar,]}
             >
-                <ListItem>
-                    <ListItem.Content>
-                        <ListItem.Title>Id Donacion</ListItem.Title>
-                    </ListItem.Content>
-                    <ListItem.Content>
-                        <ListItem.Title>Cantidad</ListItem.Title>
-                    </ListItem.Content>  
-                    <ListItem.Content>
-                        <ListItem.Title>Estado</ListItem.Title>
-                    </ListItem.Content>      
-                </ListItem>
-                {datosAceptadas.data.map((fila, i) => {
-                    const col = fila.estado ? 'green' : 'red';
-                    return (
-                        <ListItem key={i}>
-                            <ListItem.Content>
-                                <ListItem.Title>{fila.id_donacion}</ListItem.Title>
-                            </ListItem.Content>
-                            <ListItem.Content>
-                                <ListItem.Title>{fila.cantidad}</ListItem.Title>
-                            </ListItem.Content>
-                            <ListItem.Content style={[styles.ConBtn]}>
-                                {
-                                    fila.estado ? <TouchableOpacity
-                                        style={[styles.estado, { backgroundColor: '#5cb85c', width: '100%' }]}
-                                    >
-                                        <Text style={styles.estadoText}>Habilitado</Text>
-                                    </TouchableOpacity>
-                                    : <TouchableOpacity
-                                        style={[styles.estado, { backgroundColor: '#d9534f', width: '100%' }]}
-                                    >
-                                        <Text style={styles.estadoText}>Pendiente</Text>
-                                    </TouchableOpacity>
+                <View >
+                    <ListItem>
+                        <ListItem.Content>
+                            <ListItem.Title>Id Donacion</ListItem.Title>
+                        </ListItem.Content>
+                        <ListItem.Content>
+                            <ListItem.Title>Cantidad</ListItem.Title>
+                        </ListItem.Content>
+                        <ListItem.Content>
+                            <ListItem.Title>Estado</ListItem.Title>
+                        </ListItem.Content>
+                    </ListItem>
+                    <ScrollView>
+                        {datosAceptadas.data.map((fila, i) => {
+                            const col = fila.estado ? 'green' : 'red';
+                            return (
+                                <ListItem key={i}>
+                                    <ListItem.Content>
+                                        <ListItem.Title>{fila.id_donacion}</ListItem.Title>
+                                    </ListItem.Content>
+                                    <ListItem.Content>
+                                        <ListItem.Title>{fila.cantidad}</ListItem.Title>
+                                    </ListItem.Content>
+                                    <ListItem.Content style={[styles.ConBtn]}>
 
-                                }
-                                {
-                                    fila.estado ? <TouchableOpacity
-                                    onPress={() => openModal(fila.id_donacion)}
-                                        style={[styles.estado, { backgroundColor: '#0275d8', width: '100%' }]}
-                                    >
-                                        <Text style={styles.estadoText}>Ver</Text>
-                                    </TouchableOpacity> : null
-                                }
-                            </ListItem.Content>
-                            
-                            
-                            
-                        </ListItem>
-                    )
-                })}
-                {isModalVisible && (
-                <ModalM
-                    isVisible={isModalVisible}
-                    setVisible={setModalVisible}
-                    id_solicitud={currentIdSolicitud}
-                    onClose={closeModal}
-                    ruta={'https://proyecto-281-production.up.railway.app/api/donation/verColaboradoresDonacion'}
-                    />
-                )}
+                                        {
+                                            fila.estado == 3 ? <TouchableOpacity
+                                                style={[styles.estado, { backgroundColor: '#000', width: '100%' }]}
+                                            >
+                                                <Text style={styles.estadoText}>Terminado</Text>
+                                            </TouchableOpacity>
+                                                : null}
+                                        {fila.estado == 2 ? <TouchableOpacity
+                                            style={[styles.estado, { backgroundColor: '#0275d8', width: '100%' }]}
+                                        >
+                                            <Text style={styles.estadoText}>En Curso</Text>
+                                        </TouchableOpacity>
+                                            : null
+
+                                        }
+                                        {fila.estado == 1 ? <TouchableOpacity
+                                            style={[styles.estado, { backgroundColor: '#5cb85c', width: '100%' }]}
+                                        >
+                                            <Text style={styles.estadoText}>Habilitado</Text>
+                                        </TouchableOpacity>
+                                            : null
+
+                                        }
+                                        {
+                                            fila.estado == 0 ? <TouchableOpacity
+                                                style={[styles.estado, { backgroundColor: '#d9534f', width: '100%' }]}
+                                            >
+                                                <Text style={styles.estadoText}>Pendiente</Text>
+                                            </TouchableOpacity>
+                                                : null}
+                                        {
+                                            fila.estado ? <TouchableOpacity
+                                                onPress={() => openModal(fila.id_donacion, fila.estado)}
+                                                style={[styles.estado, { backgroundColor: '#0275d8', width: '100%' }]}
+                                            >
+                                                <Text style={styles.estadoText}>Ver</Text>
+                                            </TouchableOpacity> : null
+                                        }
+                                    </ListItem.Content>
+
+
+
+                                </ListItem>
+                            )
+                        })}
+                    </ScrollView>
+                    {isModalVisible && (
+                        <ModalM
+                            isVisible={isModalVisible}
+                            setVisible={setModalVisible}
+                            id_solicitud={currentIdSolicitud}
+                            onClose={closeModal}
+                            ruta={'https://proyecto-281-production.up.railway.app/api/donation/verColaboradoresDonacion'}
+                            rutaini={"https://proyecto-281-production.up.railway.app/api/donation/iniciarTrayectoDonacion"}
+                            rutafin={"https://proyecto-281-production.up.railway.app/api/donation/terminarTrayectoDonacion"}
+                            estado={currentEstadoDon}
+                        />
+                    )}
+                </View>
+
             </ListItem.Accordion>
 
             {/* 
@@ -243,9 +308,11 @@ const Donacion = () => {
     console.log("estamos en donacion");
     return (
         <>
-
+            <ScrollView>
             <ListaRespon />
             <ListaColab />
+            </ScrollView>
+
         </>
     );
 }
@@ -263,7 +330,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         gap: 5,
-        },
+    },
     headerTopBar: {
         backgroundColor: '#6ab7e2',
         paddingHorizontal: 12,

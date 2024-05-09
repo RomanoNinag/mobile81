@@ -14,6 +14,8 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import Perfil from '../screens/Home'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Login } from '../screens/Login'
+import Donante from '../userScreens/Donante/Donante'
+import { ConfirmarDon } from '../userScreens/Donante/ConfirmarDon'
 export const AppStackDonante = () => {
   const fcol = '#154c79';
   const ufcol = '#5E5E64'
@@ -38,7 +40,7 @@ export const AppStackDonante = () => {
         }}
       >
         <Tab.Screen
-          name='Home' component={Home}
+          name='Donante' component={Donante}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.contIconNav}>
@@ -52,7 +54,7 @@ export const AppStackDonante = () => {
         />
         <Tab.Screen
           name="Confirmar"
-          component={Donacion}
+          component={ConfirmarDon}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.contIconNav}>
@@ -66,7 +68,7 @@ export const AppStackDonante = () => {
             ),
           }}
         />
-        <Tab.Screen name='Entrega' component={Entrega}
+        {/* <Tab.Screen name='Entrega' component={Entrega}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.contIconNav}>
@@ -79,7 +81,7 @@ export const AppStackDonante = () => {
               </View>
             ),
           }}
-        />
+        /> */}
       </Tab.Navigator >
     </>
   )
