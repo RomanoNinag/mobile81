@@ -1,16 +1,16 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //ui react native
 import { ListItem, Avatar } from '@rneui/base';
+import ModalM from './modalM';
 function ListaColab() {
     const [expanded, setExpanded] = React.useState(false);
     //para recu datos
     const [datosAceptadas, setDatosAceptadas] = useState({ indice: [], data: [] });
 
-    async function getPostulaciones() {
+    const getPostulaciones=async()=> {
         console.log("estamos en colab");
         const token = await AsyncStorage.getItem('token');
         const id_user = JSON.parse(await AsyncStorage.getItem('id_user'));
@@ -91,7 +91,18 @@ function ListaRespon() {
     console.log("estamos en donacion");
     const [datosAceptadas, setDatosAceptadas] = useState({ indice: [], data: [] });
     const [datosPendiente, setDatosPendientes] = useState({ indice: [], data: [] });
-
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [currentIdSolicitud, setCurrentIdSolicitud] = useState(null);
+  
+    const openModal = (id) => {
+      setCurrentIdSolicitud(id);
+      setModalVisible(true);
+      console.log("holaaaa")
+    };
+    const closeModal = () => {
+      setModalVisible(false);
+      setCurrentIdSolicitud(null);
+    };
     async function getData() {
         const token = await AsyncStorage.getItem('token');
         const id_user = JSON.parse(await AsyncStorage.getItem('id_user'));
@@ -171,6 +182,7 @@ function ListaRespon() {
                                 }
                                 {
                                     fila.estado ? <TouchableOpacity
+                                    onPress={() => openModal(fila.id_donacion)}
                                         style={[styles.estado, { backgroundColor: '#0275d8', width: '100%' }]}
                                     >
                                         <Text style={styles.estadoText}>Ver</Text>
@@ -183,6 +195,15 @@ function ListaRespon() {
                         </ListItem>
                     )
                 })}
+                {isModalVisible && (
+                <ModalM
+                    isVisible={isModalVisible}
+                    setVisible={setModalVisible}
+                    id_solicitud={currentIdSolicitud}
+                    onClose={closeModal}
+                    ruta={'https://proyecto-281-production.up.railway.app/api/donation/verColaboradoresDonacion'}
+                    />
+                )}
             </ListItem.Accordion>
 
             {/* 
