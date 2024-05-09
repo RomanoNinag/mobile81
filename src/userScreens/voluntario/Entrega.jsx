@@ -16,7 +16,6 @@ function ListaColab() {
         const id_user = JSON.parse(await AsyncStorage.getItem('id_user'));
         // console.log(token);
         // console.log(id_user);
-        console.log('cccccccccccccccccccccccccccccc=============================================******************')
         axios.get('https://proyecto-281-production.up.railway.app/api/delivery/getPostulacionColaborador', {
             headers: {
                 "x-token": token,
@@ -53,9 +52,20 @@ function ListaColab() {
                 }}
                 style={styles.headerTopBar}
             >
+                <ListItem>
+                    <ListItem.Content>
+                        <ListItem.Title>Id Solicitud</ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Content>
+                        <ListItem.Title>Cantidad</ListItem.Title>
+                    </ListItem.Content>  
+                    <ListItem.Content>
+                        <ListItem.Title>Estado</ListItem.Title>
+                    </ListItem.Content>      
+                </ListItem>
                 {datosAceptadas.data.map((fila, i) => {
                     return (
-                        <ListItem key={i}>
+                        <ListItem key={i} >
                             <ListItem.Content>
                                 <ListItem.Title>{fila.id_user}</ListItem.Title>
                             </ListItem.Content>
@@ -122,21 +132,49 @@ function ListaRespon() {
                 }}
                 style={styles.headerTopBar}
             >
-                {datosAceptadas.data.map((fila) => {
+                <ListItem>
+                    <ListItem.Content>
+                        <ListItem.Title>Id Solicitud</ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Content>
+                        <ListItem.Title>Cantidad</ListItem.Title>
+                    </ListItem.Content>  
+                    <ListItem.Content>
+                        <ListItem.Title>Estado</ListItem.Title>
+                    </ListItem.Content>      
+                </ListItem>
+                {datosAceptadas.data.map((fila,i) => {
                     const col = fila.estado ? 'green' : 'red';
                     return (
-                        <ListItem>
+                        <ListItem key={i}>
                             <ListItem.Content>
                                 <ListItem.Title>{fila.id_solicitud}</ListItem.Title>
                             </ListItem.Content>
                             <ListItem.Content>
                                 <ListItem.Title>{fila.cantidad}</ListItem.Title>
                             </ListItem.Content>
-                            <TouchableOpacity
-                                style={[styles.estado, { backgroundColor: col }]}
-                            >
-                                <Text style={styles.estadoText}>{fila.estado ? 'Habilitado' : 'Pendiente'}</Text>
-                            </TouchableOpacity>
+                            <ListItem.Content style={[styles.ConBtn]}>
+                                {
+                                    fila.estado ? <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#5cb85c', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Habilitado</Text>
+                                    </TouchableOpacity>
+                                    : <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#d9534f', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Pendiente</Text>
+                                    </TouchableOpacity>
+
+                                }
+                                {
+                                    fila.estado ? <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#0275d8', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Ver</Text>
+                                    </TouchableOpacity> : null
+                                }
+                            </ListItem.Content>
                         </ListItem>
                     )
                 })}

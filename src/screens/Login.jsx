@@ -1,16 +1,18 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert,ActivityIndicator} from 'react-native'
 import React, { useState } from 'react'
 import axios from 'axios'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Snackbar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-
+import FlashMessage from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Login = () => {
     const navigation = useNavigation();
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setisLoading] = useState(false);
 
     handleSubmit = () => {
         console.log(user, password)
@@ -18,6 +20,7 @@ export const Login = () => {
             user: user,
             password
         }
+        setisLoading(true);
         axios.post('https://proyecto-281-production.up.railway.app/api/auth/', userData)
             .then(res => {
                 console.log(res.data);
@@ -31,10 +34,21 @@ export const Login = () => {
                     navigation.navigate('HomeStack');
                     // <AppStack />
                 }
-            });
+            })
+            .catch(err => {
+                showMessage({
+                    message: "Error",
+                    description: err.response.data.msg,
+                    type: "danger",
+                })
+            })
+            .finally(() => {
+                setisLoading(false);
+            })
     }
 
     return (
+        <>
         <View>
             <View style={styles.logoContainer}>
                 <Image source={require('../../assets/icon.png')}
@@ -66,12 +80,19 @@ export const Login = () => {
                     style={styles.inBut}
                     onPress={() => handleSubmit()}
                 >
+                    
                     <View>
-                        <Text style={styles.textSign}>Log In</Text>
+                        <Text style={styles.textSign}>
+                        {
+                            isLoading ? <ActivityIndicator size="small" color="white" /> : <Text style={styles.textSign}>Log In</Text>
+                        }
+                        </Text>
                     </View>
                 </TouchableOpacity>
             </View>
         </View>
+        <FlashMessage position="top" />
+        </>
     )
 }
 

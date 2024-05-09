@@ -1,39 +1,21 @@
+import React, { useEffect, useState } from 'react';
 import {
-    View,
-    Text,
-    Alert,
-    TouchableOpacity, StyleSheet, Image, BackHandler, ScrollView
-} from 'react-native'
-
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+  View, Text, Alert, TouchableOpacity, Image, StyleSheet, ScrollView, BackHandler
+} from 'react-native';
+import axios from 'axios';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Avatar } from 'react-native-paper';
 import Mobile from 'react-native-vector-icons/Entypo';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import Email from 'react-native-vector-icons/MaterialCommunityIcons';
 import Gender from 'react-native-vector-icons/Fontisto';
 import Profession from 'react-native-vector-icons/AntDesign';
-//async Storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//fontawesome
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-
-//navigation
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-//screens
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import Donacion from '../userScreens/voluntario/Donacion';
 import Entrega from '../userScreens/voluntario/Entrega';
-import { Login } from './Login';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-//fuera del home
-//const Tab = createBottomTabNavigator();
-//dento home
-
 const Home = () => {
     const [userData, setUserData] = useState('');
-
     const navigation = useNavigation();
     function signOut() {
         AsyncStorage.setItem('isLoggedIn', JSON.stringify(false));
@@ -41,8 +23,6 @@ const Home = () => {
         navigation.navigate('Login');
         console.log('seting false');
     }
-
-
     async function getData() {
         const token = await AsyncStorage.getItem('token');
         const id_user = JSON.parse(await AsyncStorage.getItem('id_user'));
@@ -91,16 +71,6 @@ const Home = () => {
         <ScrollView>
             <View style={{ paddingBottom: 100 }}>
                 <View style={{ position: 'relative' }}>
-                    <TouchableOpacity
-                        style={styles.backIcon}
-                    // onPress={() => {
-                    //     navigation.dispatch(DrawerActions.openDrawer());
-                    // }}
-                    >
-                        <Mobile name="menu" size={30} color="white" />
-                    </TouchableOpacity>
-
-
                     <TouchableOpacity
                         style={styles.editIcon}
                         onPress={() => signOut()}
@@ -523,4 +493,4 @@ const styles = StyleSheet.create({
 
     },
 })
-export default Home
+export default Home;

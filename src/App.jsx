@@ -42,6 +42,7 @@ function App() {
     //   {/* <Home /> */}
 
     // </NavigationContainer>
+    
     <Route />
   );
 }

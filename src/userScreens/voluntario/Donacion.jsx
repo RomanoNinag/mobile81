@@ -53,6 +53,17 @@ function ListaColab() {
                 }}
                 style={styles.headerTopBar}
             >
+                <ListItem>
+                    <ListItem.Content>
+                        <ListItem.Title>Id Donacion</ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Content>
+                        <ListItem.Title>Cantidad</ListItem.Title>
+                    </ListItem.Content>  
+                    <ListItem.Content>
+                        <ListItem.Title>Estado</ListItem.Title>
+                    </ListItem.Content>      
+                </ListItem>
                 {datosAceptadas.data.map((fila, i) => {
                     return (
                         <ListItem key={i}>
@@ -67,6 +78,7 @@ function ListaColab() {
                             >
                                 <Text style={styles.estadoText}>Habilitado</Text>
                             </TouchableOpacity>
+                            
                         </ListItem>
                     )
                 })}
@@ -122,6 +134,17 @@ function ListaRespon() {
                 }}
                 style={styles.headerTopBar}
             >
+                <ListItem>
+                    <ListItem.Content>
+                        <ListItem.Title>Id Donacion</ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Content>
+                        <ListItem.Title>Cantidad</ListItem.Title>
+                    </ListItem.Content>  
+                    <ListItem.Content>
+                        <ListItem.Title>Estado</ListItem.Title>
+                    </ListItem.Content>      
+                </ListItem>
                 {datosAceptadas.data.map((fila, i) => {
                     const col = fila.estado ? 'green' : 'red';
                     return (
@@ -132,11 +155,31 @@ function ListaRespon() {
                             <ListItem.Content>
                                 <ListItem.Title>{fila.cantidad}</ListItem.Title>
                             </ListItem.Content>
-                            <TouchableOpacity
-                                style={[styles.estado, { backgroundColor: col }]}
-                            >
-                                <Text style={styles.estadoText}>{fila.estado ? 'Habilitado' : 'Pendiente'}</Text>
-                            </TouchableOpacity>
+                            <ListItem.Content style={[styles.ConBtn]}>
+                                {
+                                    fila.estado ? <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#5cb85c', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Habilitado</Text>
+                                    </TouchableOpacity>
+                                    : <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#d9534f', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Pendiente</Text>
+                                    </TouchableOpacity>
+
+                                }
+                                {
+                                    fila.estado ? <TouchableOpacity
+                                        style={[styles.estado, { backgroundColor: '#0275d8', width: '100%' }]}
+                                    >
+                                        <Text style={styles.estadoText}>Ver</Text>
+                                    </TouchableOpacity> : null
+                                }
+                            </ListItem.Content>
+                            
+                            
+                            
                         </ListItem>
                     )
                 })}
@@ -195,6 +238,11 @@ const styles = StyleSheet.create({
         paddingVertical: 30,
         paddingHorizontal: 30,
     },
+    ConBtn: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 5,
+        },
     headerTopBar: {
         backgroundColor: '#6ab7e2',
         paddingHorizontal: 12,
